@@ -1,0 +1,22 @@
+# Ignore all .txt files
+*.txt
+
+# Ignore all binary files
+*.exe
+*.dll
+*.so
+*.o
+*.out
+*.bin
+
+# Ignore all folders named "inputs" or "bin"
+**/inputs/
+**/bin/
+
+# Ignore entire aoc_22 and aoc_23 folders
+aoc_22/
+aoc_23/
+
+# Ignore files and folders starting with '.', except .gitignore
+.*
+!.gitignore
