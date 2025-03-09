@@ -1,4 +1,5 @@
 USAGE
+
     Copy and rename this folder as you wish.
     Then each day just run the script "create_aoc_day.sh".
     It will ask you to set the day number and file extension.
@@ -23,6 +24,7 @@ USAGE
             "${script_dir}/code_templates/template${file_ext}"
 
 INFO
+
     https://adventofcode.com/
     This directory is a template for Advent of Code events,
     but it can also be reused elsewhere.
