@@ -1,7 +1,6 @@
-# Ignore all .txt files
 *.txt
 
-# Ignore all binary files
+# binary files
 *.exe
 *.dll
 *.so
@@ -9,14 +8,20 @@
 *.out
 *.bin
 
-# Ignore all folders named "inputs" or "bin"
+# vscode project organizer
+*.sln
+
+# c# config
+*.csproj
+
+# folders
 **/inputs/
 **/bin/
+**/obj/
 
-# Ignore entire aoc_22 and aoc_23 folders
-aoc_22/
-aoc_23/
+aoc_22_to_refactor/
+aoc_23_to_refactor/
 
-# Ignore files and folders starting with '.', except .gitignore
+# all starting with '.', except .gitignore
 .*
 !.gitignore

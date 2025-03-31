@@ -23,6 +23,8 @@ USAGE
         Templates:
             "${script_dir}/code_templates/template${file_ext}"
 
+    For project-based code (e.g., C#), the solution should naturally be replaced by the project.
+
 INFO
 
     https://adventofcode.com/
@@ -31,6 +33,6 @@ INFO
 
     The script "create_aoc_day.sh" automatically creates the necessary files.
 
-    There is also a prepared Python file template.
+    There is also a prepared Python and C# file template.
 
     Made by https://github.com/Chajmer
