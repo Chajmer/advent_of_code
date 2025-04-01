@@ -4,30 +4,41 @@ using System.Linq;
 
 // =============== SOLUTION PART =============== //
 
-static int Solve(string weatherInput)
+static bool TakeSolve(string take)
 {
-    int result = 0;
-    foreach (var line in weatherInput.Split('\n'))
+    string[] numsWithColors = take.Split(',');
+    foreach (var item in numsWithColors)
     {
-        int first = '0';
-        for (int i = 0; i < line.Length; ++i)
-        {
-            if (char.IsDigit(line[i]))
-            {
-                first = line[i];
-                break;
-            }
-        }
-        int last = first;
-        for (int i = line.Length - 1; i >= 0; --i)
-        {
-            if (char.IsDigit(line[i]))
-            {
-                last = line[i];
-                break;
-            }
-        }
-        result += (first - '0') * 10 + (last - '0');
+        string[] numAndColor = item.Trim().Split(' ');
+        int num = Convert.ToInt32(numAndColor[0]);
+        string color = numAndColor[1];
+        if (color == "red" && num > 12) return false;
+        if (color == "green" && num > 13) return false;
+        if (color == "blue" && num > 14) return false;
+    }
+    return true;
+}
+
+static int RoundSolve(string line)
+{
+    string[] headAndBody = line.Split(':');
+    string[] bagTakes = headAndBody[1].Split(';');
+
+    foreach (var take in bagTakes)
+    {
+        if (!TakeSolve(take)) return 0;
+    }
+
+    return Convert.ToInt32(headAndBody[0].Split(' ')[1]);
+}
+
+static int Solve(string games)
+{
+    string[] rounds = games.Split('\n');
+    int result = 0;
+    foreach (var line in rounds)
+    {
+        result += RoundSolve(line);
     }
     return result;
 }

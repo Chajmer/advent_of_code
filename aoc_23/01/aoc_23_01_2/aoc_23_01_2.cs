@@ -19,7 +19,7 @@ static string ReplaceStringNums(string weatherInput)
     return weatherInput;
 }
 
-int Solve(string input)
+static int Solve(string input)
 {
     string weatherInput = ReplaceStringNums(input);
     int result = 0;

@@ -3,7 +3,8 @@ using System.IO;
 using System.Linq;
 
 // =============== SOLUTION PART =============== //
-int Solve(string input)
+
+static int Solve(string input)
 {
     int result = 0;
     return result;
