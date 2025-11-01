@@ -9,4 +9,4 @@ making needed files and Python, C# template codes. Feel free to use.
 
 Solutions:
   - aoc_24:  39 python, 2 cpp --- 20 / 24 done
-  - aoc_23:  8 C#, 10 python  ---  9 / 24 done
+  - aoc_23:  9 C#, 11 python  ---  10 / 24 done
