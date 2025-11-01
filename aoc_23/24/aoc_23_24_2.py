@@ -7,7 +7,7 @@ def solve(input):
     # parse
     hail_stones = ([([([int(x2) for x2 in x1.split(', ')],
                        [int(x2) for x2 in y1.split(', ')])
-                    for x1, y1 in [x.split('@')]])[0] for x in input.split('\n')])
+                    for x1, y1 in [x.split('@')]])[0] for x in input.split('\n\n')[1].split('\n')])
     # solve
     x, y, z, vx, vy, vz, a, b, c = symbols('x y z vx vy vz a b c')
     coords = [x, y, z]
@@ -16,8 +16,7 @@ def solve(input):
     equations = []
     for i, hs in enumerate(hail_stones[:3]):
         for j in range(3):
-            equations.append(coords[j]-hs[0][j]
-                             + coeffs[i]*(velocity[j]-hs[1][j]))
+            equations.append(coords[j] - hs[0][j] + coeffs[i] * (velocity[j] - hs[1][j]))
     solution = sympy_solve(equations)
     # return
     return solution[0][x] + solution[0][y] + solution[0][z]

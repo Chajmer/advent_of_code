@@ -4,60 +4,56 @@ using System.Linq;
 
 // =============== SOLUTION PART =============== //
 
-static int Hail_intersection_valuation(Hail first, Hail second, long low, long high)
+static bool Hail_intersection_valuation(Hail h1, Hail h2, long low, long high)
 {
-    // some a == 0
-    // not happening in test case
+    double det = h1.b * h2.a - h2.b * h1.a;
 
-    // (ay-bx)/a == same of second
-    if (first.b * second.a == first.a * second.b)
-        return (first.c * second.a == second.c * first.a) ? 1 : 0;
-    // normal calculation
-    var x_cor = (((double)second.c / second.a) - ((double)first.c / first.a)) / (((double)first.b / first.a) - ((double)second.b / second.a));
-    var y_cor = (double)first.b / first.a * x_cor + (double)first.c / first.a;
-    // return if on boudnries 200000000000000 and at most 400000000000000
-    // ano skarede - da sa dat do funkcie
-    bool boudry_bool = x_cor >= low && x_cor <= high && y_cor >= low && y_cor <= high;
-    bool first_x_bool = (x_cor < first.x && first.a < 0) || (x_cor > first.x && first.a > 0) || (x_cor == first.x);
-    bool first_y_bool = (y_cor < first.y && first.b < 0) || (y_cor > first.y && first.b > 0) || (y_cor == first.y);
-    bool second_x_bool = (x_cor < second.x && second.a < 0) || (x_cor > second.x && second.a > 0) || (x_cor == second.x);
-    bool second_y_bool = (y_cor < second.y && second.b < 0) || (y_cor > second.y && second.b > 0) || (y_cor == second.y);
-    bool direction_bool = first_x_bool && first_y_bool && second_x_bool && second_y_bool;
-    return (boudry_bool && direction_bool) ? 1 : 0;
+    // parralell lines
+    if (det == 0)
+        return h1.c * h2.a == h2.c * h1.a; // (ay-bx)/a compare
+
+    // intersection point - kind of Cramer's solution
+    var x = (h2.c * h1.a - h1.c * h2.a) / det;
+    var y = (h2.c * h1.b - h1.c * h2.b) / det;
+
+    // boundary check solution
+    if (x < low || x > high || y < low || y > high) return false;
+
+    // direction check (dot product)
+    bool h1_direction_bool = (x - h1.x) * h1.a + (y - h1.y) * h1.b >= 0;
+    bool h2_direction_bool = (x - h2.x) * h2.a + (y - h2.y) * h2.b >= 0;
+
+    return h1_direction_bool && h2_direction_bool;
 }
 
-static Hail Count_info_line(string hail_info)
+static Hail Parse_hail_info(string hail_info)
 {
-    var coords_separ_vector = hail_info.Split(" @ ");
-    var coords = coords_separ_vector[0].Split(", ");
-    var vectors = coords_separ_vector[1].Split(", ");
-    return new Hail(Convert.ToInt64(coords[0]), Convert.ToInt64(coords[1]), Convert.ToInt64(vectors[0]), Convert.ToInt64(vectors[1]));
+    var parts = hail_info.Split(" @ ");
+    var coords = parts[0].Split(", ").Select(double.Parse).ToArray();
+    var vectors = parts[1].Split(", ").Select(double.Parse).ToArray();
+    return new Hail(coords[0], coords[1], vectors[0], vectors[1]);
 }
 
-static List<Hail> Count_info_whole(string hails_info)
+static List<Hail> Get_hails_info(string hails_info)
 {
-    string[] lines = hails_info.Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
     var result = new List<Hail>();
-    foreach (var line in lines)
+    foreach (var line in hails_info.Split("\n"))
     {
-        result.Add(Count_info_line(line));
+        result.Add(Parse_hail_info(line));
     }
     return result;
 }
 
-static int Count_hail_intersection(string hails_info, long low, long high)
+static int Count_hail_intersection(string hails_input, long low, long high)
 {
     int result = 0;
-    // count needed for each line store in List
-    var hails_counted_info = Count_info_whole(hails_info);
-    // inner for cycle List check 2 info against
-    // if cross in boudries ++result
-    // done
-    for (int i = 0; i < hails_counted_info.Count; ++i)
+    var hails_info = Get_hails_info(hails_input);
+    for (int i = 0; i < hails_info.Count; ++i)
     {
-        for (int j = i + 1; j < hails_counted_info.Count; ++j)
+        for (int j = i + 1; j < hails_info.Count; ++j)
         {
-            result += Hail_intersection_valuation(hails_counted_info[i], hails_counted_info[j], low, high);
+            if (Hail_intersection_valuation(hails_info[i], hails_info[j], low, high))
+                ++result;
         }
     }
     return result;
@@ -65,14 +61,9 @@ static int Count_hail_intersection(string hails_info, long low, long high)
 
 static int Solve(string input)
 {
-    string example = @"19, 13, 30 @ -2,  1, -2
-18, 19, 22 @ -1, -1, -2
-20, 25, 34 @ -2, -2, -4
-12, 31, 28 @ -1, -2, -1
-20, 19, 15 @  1, -5, -3";
-    Console.WriteLine(Count_hail_intersection(example, 7, 27));
-    int result = Count_hail_intersection(input, 200000000000000, 400000000000000);
-    return result;
+    var head_and_body = input.Split("\n\n");
+    var head = head_and_body[0].Split(", ").Select(long.Parse).ToArray();
+    return Count_hail_intersection(head_and_body[1], head[0], head[1]);
 }
 
 // =============== TEMPLATE PART =============== //
@@ -96,17 +87,17 @@ Console.WriteLine("Test done");
 // =============== CLASS DEFINITION =============== //
 class Hail
 {
-    public long x;
-    public long y;
-    public long a;
-    public long b;
-    public long c;
-    public Hail(long h_x, long h_y, long h_a, long h_b)
+    public double x;
+    public double y;
+    public double a;
+    public double b;
+    public double c;
+    public Hail(double h_x, double h_y, double h_a, double h_b)
     {
         x = h_x;
         y = h_y;
         a = h_a;
         b = h_b;
-        c = h_y * h_a - h_b * h_x;
+        c = h_a * h_y - h_b * h_x;
     }
 }
