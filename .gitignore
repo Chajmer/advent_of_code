@@ -19,8 +19,7 @@
 **/bin/
 **/obj/
 
-aoc_22_to_refactor/
-aoc_23_to_refactor/
+*_to_refactor/
 
 # all starting with '.', except .gitignore
 .*
