@@ -11,4 +11,4 @@ Solutions:
   - aoc_25:  2 python         ---  1 / 12 done
   - aoc_24:  39 python, 2 cpp --- 20 / 24 done
   - aoc_23:  9 C#, 11 python  --- 10 / 24 done
-  - aoc_22:  8 python         ---  4 / 24 done
+  - aoc_22:  10 python        ---  5 / 24 done
