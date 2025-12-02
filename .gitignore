@@ -11,6 +11,10 @@
 # vscode project organizer
 *.sln
 
+# python cache
+*.pyc
+__pycache__/
+
 # c# config
 *.csproj
 
