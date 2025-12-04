@@ -9,83 +9,76 @@ class File:
 
 
 class Directory:
-    def __init__(self, name):
+    def __init__(self, name, parent=None):
         self.name = name
         self.size = 0
         self.dir_children = []
         self.file_children = []
-        self.parent = None
+        self.parent = parent if parent else self
 
 
-def parse_file_tree(input, initial_place):
-    current_place = initial_place
+def parse_file_tree(input, initial): # could be much more better decomposited
+    current = initial
 
     for line in input.split('\n'):
 
         if line == "$ cd /":
-            current_place = initial_place
+            current = initial
 
         elif line == "$ cd ..":
-            current_place = current_place.parent
+            current = current.parent
 
         elif line[0:5] == "$ cd ":
-            if line[5:] not in [x.name for x in current_place.dir_children]:
-                new_place = Directory(line[5:])
-                current_place.dir_children.append(new_place)
-                new_place.parent = current_place
-                current_place = new_place
+            if line[5:] not in [x.name for x in current.dir_children]:
+                current.dir_children.append(Directory(line[5:], current))
+                current = current.dir_children[-1]
             else:
-                for child in current_place.dir_children:
+                for child in current.dir_children:
                     if child.name == line[5:]:
-                        current_place = child
+                        current = child
                         break
 
         elif line == "$ ls":
             pass # list cases are both catched below
 
         elif line[0:4] == "dir ":
-            if line[4:] not in [x.name for x in current_place.dir_children]:
-                new_place = Directory(line[4:])
-                current_place.dir_children.append(new_place)
-                new_place.parent = current_place
+            if line[4:] not in [x.name for x in current.dir_children]:
+                current.dir_children.append(Directory(line[4:], current))
         
-        else: # it is number and file name
-            atributes = line.split()
-            name = atributes[1]
-            size = int(atributes[0])
-            if name not in [x.name for x in current_place.file_children]:
-                current_place.file_children.append(File(name, size))
+        else: # it's number and file name
+            size, name = line.split()
+            if name not in [x.name for x in current.file_children]:
+                current.file_children.append(File(name, int(size)))
 
 
-def get_dir_sum(dir: Directory):
+def update_dir_sizes(dir: Directory):
     dir.size = sum([x.size for x in dir.file_children])
+    
     for child in dir.dir_children:
-        get_dir_sum(child)
+        update_dir_sizes(child)
         dir.size += child.size
 
 
-def come_through_dirs(dir: Directory, mini, factor):
-    if factor + dir.size >= 0 and (mini is None or mini > dir.size):
-        mini = dir.size
+def find_min_dir_to_remove(dir: Directory, need_to_free):
+    if need_to_free > dir.size:
+        return float('inf')
+    
+    mini = dir.size
         
     for child in dir.dir_children:
-        rec = come_through_dirs(child, mini, factor)
-        if rec < mini:
-            mini = rec
+        mini = min(mini, find_min_dir_to_remove(child, need_to_free))
         
     return mini
 
 
 def solve(input):
-    initial_place = Directory("/")
-    initial_place.parent = initial_place
+    initial = Directory("/")
     
-    parse_file_tree(input, initial_place)
+    parse_file_tree(input, initial)
 
-    # get sum into all dirs
-    get_dir_sum(initial_place)
+    update_dir_sizes(initial)
 
-    return come_through_dirs(initial_place, None, 40000000 - initial_place.size)
+    return find_min_dir_to_remove(initial, initial.size - 40000000)
 
 
 # =============== TEMPLATE PART =============== #
