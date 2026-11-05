@@ -10,5 +10,5 @@ making needed files and Python, C# template codes. Feel free to use.
 Solutions:
   - aoc_25:  23 python        --- 12 / 12 done
   - aoc_24:  48 python, 2 cpp --- 25 / 25 done
-  - aoc_23:  11 C#, 17 python --- 14 / 25 done
+  - aoc_23:  11 C#, 19 python --- 15 / 25 done
   - aoc_22:  14 python        ---  7 / 25 done
